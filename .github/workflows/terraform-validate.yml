@@ -12,5 +12,8 @@ jobs:
     - name: Check out code  
       uses: actions/checkout@v1
 
+    - name: Run a Terraform init    
+      run: terraform init
+
     - name: Run a Terraform validate    
       run: terraform plan
