@@ -18,8 +18,50 @@ jobs:
         entrypoint: terraform
         args: init
 
-    - name: Run a Terraform plan    
+    - name: Run a Terraform plan   
+      id: plan 
       uses: hashicorp/terraform-github-actions@master
       with:
         entrypoint: terraform
-        args: apply
+        args: plan -input=false -no-color -out=tfplan 
+
+    - name: Apply Terraform
+      if: steps.plan.outcome == 'success'
+      id: apply
+      continue-on-error: true
+      run: |
+        cd terraform/${{ matrix.path }}
+        terraform apply \
+          -input=false \
+          -no-color \
+          tfplan   
+
+    - name: Post Plan and Apply to GitHub PR
+      if: steps.plan.outcome == 'success' && steps.apply.outcome == 'success'
+      uses: mshick/add-pr-comment@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
+        message: |
+          Applying **${{ matrix.path }}**:
+
+          ```diff
+          ${{ env.PLAN }}
+          ```
+
+          ```
+          ${{ steps.apply.outputs.stdout }}
+            ``` 
+
+    - name: Post Apply Failure
+      if: steps.apply.outcome == 'failure'
+      uses: mshick/add-pr-comment@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
+        message: |
+          Apply failed for **${{ matrix.path }}**:
+
+          ```
+          ${{ steps.apply.outputs.stderr }}
+          ```  

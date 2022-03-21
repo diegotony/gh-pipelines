@@ -17,10 +17,61 @@ jobs:
       uses: hashicorp/terraform-github-actions@master
       with:
         entrypoint: terraform
-        args: init
+        args: init  -input=false          
 
-    - name: Run a Terraform plan    
+    - name: Run a Terraform plan   
+      id: plan 
       uses: hashicorp/terraform-github-actions@master
       with:
         entrypoint: terraform
-        args: plan
+        args: plan -input=false -no-color -out=tfplan 
+
+    - name: Run a Terraform show    
+      uses: hashicorp/terraform-github-actions@master
+      with:
+        entrypoint: terraform
+        args: show -no-color tfplan 
+
+    - name: Reformat Plan
+      if: steps.plan.outcome == 'success'
+      run: |
+        echo '${{ steps.plan.outputs.stdout || steps.plan.outputs.stderr }}' \
+        | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > plan.txt          
+
+    - name: Put Plan in Env Var
+      if: steps.plan.outcome == 'success'
+      run: |
+        PLAN=$(cat plan.txt)
+        echo "PLAN<<EOF" >> $GITHUB_ENV
+        echo "$PLAN" >> $GITHUB_ENV
+        echo "EOF" >> $GITHUB_ENV 
+
+    - name: Post Plan and Apply to GitHub PR
+      if: steps.plan.outcome == 'success'
+      uses: mshick/add-pr-comment@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
+        message: |
+          Applying **${{ matrix.path }}**:
+
+          ```diff
+          ${{ env.PLAN }}
+          ```
+
+          ```
+          ${{ steps.apply.outputs.stdout }}
+          ```     
+
+    - name: Plan
+      if: steps.plan.outcome == 'failure'
+      uses: mshick/add-pr-comment@v1
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
+        message: |
+          Plan failed for **${{ matrix.path }}**:
+
+          ```
+          ${{ steps.plan.outputs.stderr }}
+          ```            
