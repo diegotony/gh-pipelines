@@ -4,6 +4,9 @@ on:
       repo:
         required: false
         type: string
+    secrets:
+      token:
+        required: true
 jobs:
   release:
     name: Release
@@ -18,4 +21,4 @@ jobs:
       - name: Semantic Release
         run : npx semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.token }}
