@@ -5,8 +5,8 @@ on:
         required: false
         type: string
 jobs:
-  validate:
-    name: Validate
+  apply:
+    name: Apply
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  

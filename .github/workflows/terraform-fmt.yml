@@ -5,8 +5,8 @@ on:
         required: false
         type: string
 jobs:
-  init:
-    name: Validate
+  fmt:
+    name: FMT
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
