@@ -1,10 +1,9 @@
-name: Release Module
-
-on:
-  push:
-    branches:
-      - main
-
+on: 
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
 jobs:
   release:
     name: Release

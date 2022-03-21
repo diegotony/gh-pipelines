@@ -1,8 +1,9 @@
-on:
-  pull_request:
-    branches:
-      - main
-
+on: 
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
 jobs:
   validate:
     name: Validate
