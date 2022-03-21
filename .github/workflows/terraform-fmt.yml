@@ -11,13 +11,12 @@ jobs:
     steps:
     - name: Check out code  
       uses: actions/checkout@v2
-      
+
     - name: Run a Terraform init 
       run:
         terraform init
 
     - name: Run a Terraform fmt    
-      uses: hashicorp/terraform-github-actions@master
       run:
         terraform fmt .
 
