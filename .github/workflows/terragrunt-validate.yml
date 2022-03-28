@@ -6,14 +6,20 @@ on:
         type: string
 jobs:
   validate:
-    name: Validate
+    name: validate
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
       uses: actions/checkout@v1
 
+    - name: Setup Terragrunt
+      uses: autero1/action-terragrunt@v1.1.0
+
     - name: Run a Terraform init    
       run: terraform init
 
+    - name: Interact with Terragrunt
+      run: terragrunt --version
+
     - name: Run a Terraform validate    
-      run: terraform validate
+      run: terragrunt run-all validate

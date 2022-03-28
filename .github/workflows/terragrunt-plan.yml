@@ -4,7 +4,13 @@ on:
       repo:
         required: false
         type: string
-
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
 jobs:
   plan:
     name: Plan
@@ -13,6 +19,9 @@ jobs:
     - name: Check out code  
       uses: actions/checkout@v1
 
+    - name: Setup Terragrunt
+      uses: autero1/action-terragrunt@v1.1.0
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -20,24 +29,18 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    - name: Run a Terraform init  
+    - name: Initialized  
       uses: hashicorp/terraform-github-actions@master
-      with:
-        entrypoint: terraform
-        args: init  -input=false          
+      run: terragrunt run-all init  -input=false          
 
-    - name: Run a Terraform plan   
+    - name: Plan  
       id: plan 
       uses: hashicorp/terraform-github-actions@master
-      with:
-        entrypoint: terraform
-        args: plan -input=false -no-color -out=tfplan 
+      run: terragrunt run-all plan -input=false -no-color -out=tfplan 
 
-    - name: Run a Terraform show    
+    - name: Show    
       uses: hashicorp/terraform-github-actions@master
-      with:
-        entrypoint: terraform
-        args: show -no-color tfplan 
+      run:  terragrunt run-all show -no-color tfplan 
 
     - name: Reformat Plan
       if: steps.plan.outcome == 'success'
