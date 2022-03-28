@@ -1,0 +1,27 @@
+on: 
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+
+jobs:
+  validate:
+    name: validate
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code  
+      uses: actions/checkout@v1
+
+    - name: Initialized    
+      run: terraform init -input=false 
+
+    - name: Run a Terraform validate    
+      run: terraform validate
