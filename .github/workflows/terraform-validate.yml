@@ -14,7 +14,7 @@ on:
 
 jobs:
   validate:
-    name: validate
+    name: VALIDATE
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
