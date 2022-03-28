@@ -53,8 +53,6 @@ jobs:
     - name: Update Pull Request
       uses: actions/github-script@0.9.0
       if: github.event_name == 'pull_request'
-      env:
-        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
@@ -66,7 +64,8 @@ jobs:
           <details><summary>Show Plan</summary>
 
           \`\`\`\n
-          ${process.env.PLAN}
+          Terraform \n
+          ${{ steps.plan.outputs.stdout }}
           \`\`\`
 
           </details>
@@ -79,3 +78,12 @@ jobs:
             repo: context.repo.repo,
             body: output
           })
+
+    - name: Terraform Plan Status
+      if: steps.plan.outcome == 'failure'
+      run: exit 1
+
+
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: terraform apply -auto-approve
