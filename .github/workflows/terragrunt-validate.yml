@@ -4,6 +4,14 @@ on:
       repo:
         required: false
         type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+
 jobs:
   validate:
     name: validate
@@ -17,11 +25,15 @@ jobs:
       with:
         terragrunt_version: 0.21.13
 
-    - name: Run a Terraform init    
-      run: terraform init
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    - name: Interact with Terragrunt
-      run: terragrunt --version
+    - name: Initialized    
+      run: terragrunt run-all init  -input=false 
 
     - name: Run a Terraform validate    
       run: terragrunt run-all validate
