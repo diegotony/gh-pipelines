@@ -86,4 +86,4 @@ jobs:
 
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      run: terragrunt run-all apply -auto-approve
+      run: terragrunt run-all apply --terragrunt-non-interactive-auto-approve
