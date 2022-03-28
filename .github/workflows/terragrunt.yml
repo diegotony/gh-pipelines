@@ -42,7 +42,6 @@ jobs:
 
     - name: Terraform Plan
       id: plan
-      if: github.event_name == 'pull_request'
       run: terragrunt run-all plan -no-color
       continue-on-error: true
 
