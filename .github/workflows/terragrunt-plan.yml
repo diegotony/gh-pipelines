@@ -34,53 +34,39 @@ jobs:
     - name: Initialized  
       run: terragrunt run-all init  -input=false          
 
-    - name: Plan  
-      id: plan 
-      run: terragrunt run-all plan -input=false -no-color -out=tfplan 
+    - name: Terraform Plan
+      id: plan
+      if: github.event_name == 'pull_request'
+      run: terragrunt run-all plan -no-color
+      continue-on-error: true
 
-    - name: Show    
-      run:  terragrunt run-all show -no-color tfplan 
 
-    - name: Reformat Plan
-      if: steps.plan.outcome == 'success'
-      run: |
-        echo '${{ steps.plan.outputs.stdout || steps.plan.outputs.stderr }}' \
-        | sed -E 's/^([[:space:]]+)([-+])/\2\1/g' > plan.txt          
-
-    - name: Put Plan in Env Var
-      if: steps.plan.outcome == 'success'
-      run: |
-        PLAN=$(cat plan.txt)
-        echo "PLAN<<EOF" >> $GITHUB_ENV
-        echo "$PLAN" >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV 
-
-    - name: Post Plan and Apply to GitHub PR
-      if: steps.plan.outcome == 'success'
-      uses: mshick/add-pr-comment@v1
+    - name: Update Pull Request
+      uses: actions/github-script@0.9.0
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        repo-token-user-login: 'github-actions[bot]'
-        message: |
-          Applying **${{ matrix.path }}**:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
 
-          ```diff
-          ${{ env.PLAN }}
-          ```
+          <details><summary>Show Plan</summary>
 
-          ```
-          ${{ steps.apply.outputs.stdout }}
-          ```     
+          \`\`\`\n
+          ${process.env.PLAN}
+          \`\`\`
 
-    - name: Plan
-      if: steps.plan.outcome == 'failure'
-      uses: mshick/add-pr-comment@v1
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
-        repo-token-user-login: 'github-actions[bot]'
-        message: |
-          Plan failed for **${{ matrix.path }}**:
+          </details>
 
-          ```
-          ${{ steps.plan.outputs.stderr }}
-          ```            
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
