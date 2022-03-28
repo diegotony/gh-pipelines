@@ -30,16 +30,13 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     - name: Initialized  
-      uses: hashicorp/terraform-github-actions@master
       run: terragrunt run-all init  -input=false          
 
     - name: Plan  
       id: plan 
-      uses: hashicorp/terraform-github-actions@master
       run: terragrunt run-all plan -input=false -no-color -out=tfplan 
 
     - name: Show    
-      uses: hashicorp/terraform-github-actions@master
       run:  terragrunt run-all show -no-color tfplan 
 
     - name: Reformat Plan
