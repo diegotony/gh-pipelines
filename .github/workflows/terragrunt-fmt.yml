@@ -20,6 +20,11 @@ jobs:
     - name: Check out code  
       uses: actions/checkout@v2
 
+    - name: Setup Terragrunt
+      uses: autero1/action-terragrunt@v1.1.0
+      with:
+        terragrunt_version: 0.36.6
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -28,7 +33,7 @@ jobs:
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
     - name: Initialized    
-      run: terraform init  -input=false 
+      run: terragrunt run-all init  -input=false 
 
     - name: Run a Terraform fmt    
       run:
