@@ -22,7 +22,7 @@ jobs:
           repository_url: ${{ inputs.repositoryUrl }}
           tag_format: 'v${version}'
           extra_plugins: |
-            ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github', '@semantic-release/git']
+            ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
           branches: |    
             [
               'main', 
