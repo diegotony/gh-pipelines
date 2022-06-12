@@ -5,7 +5,7 @@ on:
         type: string
         required: true
     secrets:
-      token:
+      GH_TOKEN:
         required: true
 jobs:
   semantic-release:
@@ -20,6 +20,7 @@ jobs:
         id: semantic-release
         uses: codfish/semantic-release-action@v1
         with:
+          debug: true
           dry_run: true
           repository_url: ${{ inputs.repositoryUrl }}
           tag_format: 'v${version}'
@@ -39,7 +40,7 @@ jobs:
               }
             ]
         env:
-          GITHUB_TOKEN: ${{ secrets.token }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           
       - name: Do something when a new release published
         if: steps.semantic.outputs.new_release_published == 'true'
