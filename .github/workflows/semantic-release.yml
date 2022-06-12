@@ -30,7 +30,6 @@ jobs:
                 prerelease: true
               }
             ]
-          repository_url: https://github.com/codfish/semantic-release-action.git
           tag_format: 'v${version}'
           plugins: |
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/npm', '@semantic-release/github']
