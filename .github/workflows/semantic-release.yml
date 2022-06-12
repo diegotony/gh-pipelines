@@ -14,17 +14,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Check
-        run: echo "${{ inputs.repositoryUrl }}"
       - name: Semantic Release
         id: semantic-release
-        uses: codfish/semantic-release-action@v1
+        uses: cycjimmy/semantic-release-action@v3
         with:
-          dry_run: true
-          repository_url: ${{ inputs.repositoryUrl }}
-          tag_format: 'v${version}'
-          plugins: |
-            ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
+          extra_plugins: |
+            @semantic-release/commit-analyzer
+            @semantic-release/release-notes-generator
+            @semantic-release/git
+            @semantic-release/github
           branches: |    
             [
               'main', 
