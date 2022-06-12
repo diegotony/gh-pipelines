@@ -12,26 +12,36 @@ jobs:
     name: semantic-release
     runs-on: ubuntu-latest
     steps:
-      - run: codfish/semantic-release-action@v1
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Semantic Release
+        id: semantic-release
+        uses: codfish/semantic-release-action@v1
         with:
           dry_run: true
-          branches: |
-            [
-              '+([0-9])?(.{+([0-9]),x}).x',
-              'master',
-              'next',
-              'next-major',
-              {
-                name: 'beta',
-                prerelease: true
-              },
-              {
-                name: 'alpha',
-                prerelease: true
-              }
-            ]
           tag_format: 'v${version}'
           plugins: |
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/npm', '@semantic-release/github']
+          branches: |    
+            [
+              'main', 
+              'next-major', 
+              {
+                name: 'beta', 
+                prerelease: true
+              }, 
+              {
+                name: 'alpha', 
+                prerelease: true
+              }
+            ]
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          
+      - name: Do something when a new release published
+        if: steps.semantic.outputs.new_release_published == 'true'
+        run: |
+          echo ${{ steps.semantic.outputs.new_release_version }}
+          echo ${{ steps.semantic.outputs.new_release_major_version }}
+          echo ${{ steps.semantic.outputs.new_release_minor_version }}
+          echo ${{ steps.semantic.outputs.new_release_patch_version }}
