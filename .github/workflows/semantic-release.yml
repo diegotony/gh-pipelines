@@ -20,11 +20,10 @@ jobs:
         id: semantic-release
         uses: codfish/semantic-release-action@v1
         with:
-          debug: true
           dry_run: true
           repository_url: ${{ inputs.repositoryUrl }}
           tag_format: 'v${version}'
-          extra_plugins: |
+          plugins: |
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
           branches: |    
             [
