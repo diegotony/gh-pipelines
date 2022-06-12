@@ -7,6 +7,7 @@ on:
     secrets:
       GH_TOKEN:
         required: true
+
 jobs:
   semantic-release:
     name: semantic-release
@@ -24,8 +25,7 @@ jobs:
             ['@semantic-release/commit-analyzer', '@semantic-release/release-notes-generator', '@semantic-release/github']
           branches: |    
             [
-              'main', 
-              'next-major', 
+              'main',
               {
                 name: 'beta', 
                 prerelease: true
