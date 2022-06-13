@@ -4,18 +4,41 @@ on:
       repo:
         required: false
         type: string
-
+    secrets:
+      GH_TOKEN:
+        required: true
 jobs:
   terraform-validate:
     name: terraform-validate
     runs-on: ubuntu-latest
     steps:
-    - name: Check out code  
+    - name: Check out code 
+      if: github.event_name == 'pull_request'
       uses: actions/checkout@v1
 
-    - name: Initialized    
+    - name: Initialized   
+      if: github.event_name == 'pull_request' 
       run: terraform init -input=false 
 
-    - name: Run a Terraform validat
-      continue-on-error: true    
+    - name: Run a Terraform validate
+      id: validate
+      continue-on-error: true
+      if: github.event_name == 'pull_request' 
       run: terraform validate
+
+    - name: Create Pull Request
+      uses: actions/github-script@0.9.0
+      if: github.event_name == 'pull_request'
+      with:
+        github-token: ${{ secrets.GH_TOKEN }}
+        script: |
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+
+          github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
