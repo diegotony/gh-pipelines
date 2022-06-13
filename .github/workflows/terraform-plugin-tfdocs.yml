@@ -11,10 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+      if: github.event_name == 'pull_request'
       with:
         ref: ${{ github.event.pull_request.head.ref }}
 
     - name: Create Config File
+      if: github.event_name == 'pull_request'
       run: |
         cat << 'EOF' > .terraform-docs.yml
         formatter: "markdown" # this is required
@@ -58,6 +60,7 @@ jobs:
         EOF
 
     - name: Render terraform docs inside the README.md and push changes back to PR branch
+      if: github.event_name == 'pull_request'
       uses: terraform-docs/gh-actions@v1.0.0
       with:
         working-dir: .
