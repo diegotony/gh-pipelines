@@ -20,6 +20,7 @@ jobs:
       uses: hashicorp/setup-terraform@v2
       
     - name: Initialized
+      id: init
       if: github.event_name == 'pull_request' 
       run: terraform init 
 
