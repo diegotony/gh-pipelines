@@ -1,9 +1,5 @@
 on: 
   workflow_call:
-    inputs:
-      repositoryUrl:
-        type: string
-        required: true
     secrets:
       GH_TOKEN:
         required: true
