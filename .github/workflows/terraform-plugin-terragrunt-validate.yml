@@ -20,20 +20,49 @@ jobs:
     - name: Check out code  
       uses: actions/checkout@v1
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
     - name: Setup Terragrunt
       uses: autero1/action-terragrunt@v1.1.0
       with:
         terragrunt_version: 0.36.6
 
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-    - name: Initialized    
+    - name: Initialized
+      id: init
+      if: github.event_name == 'pull_request' 
       run: terragrunt run-all init  -input=false 
 
-    - name: Run a Terraform validate    
-      run: terragrunt run-all validate
+    - name: Run a Terraform validate
+      id: validate
+      continue-on-error: true
+      if: github.event_name == 'pull_request' 
+      run: terragrunt run-all validate  -no-color
+
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          <details><summary>Validation Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
+
+          </details>
+          
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+

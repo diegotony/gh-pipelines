@@ -12,12 +12,15 @@ on:
       AWS_DEFAULT_REGION:
         required: true
 jobs:
-  plan:
-    name: IAC
+  terraform-plugin-terragrunt-apply:
+    name: terraform-plugin-terragrunt-apply
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
       uses: actions/checkout@v1
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
 
     - name: Setup Terragrunt
       uses: autero1/action-terragrunt@v1.1.0
@@ -31,16 +34,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-    - name: Initialized  
+    - name: Terragrunt Initialized  
       id: init
       run: terragrunt run-all init  -input=false          
 
-    - name: Run a Terraform validate  
+    - name: Terragrunt Validate  
       id: validate  
       run: terragrunt run-all validate
 
 
-    - name: Terraform Plan
+    - name: Terragrunt Plan
       id: plan
       run: terragrunt run-all plan -no-color
       continue-on-error: true
@@ -51,15 +54,15 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
-          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terraform Plan 📖\`${{ steps.plan.outcome }}\`
-          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          const output = `#### Terragrunt Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terragrunt Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terragrunt Plan 📖\`${{ steps.plan.outcome }}\`
+          #### Terragrunt Validation 🤖\`${{ steps.validate.outcome }}\`
 
           <details><summary>Show Plan</summary>
 
           \`\`\`\n
-          Terraform \n
+          Terragrunt \n
           ${{ steps.plan.outputs.stdout }}
           \`\`\`
 
@@ -74,11 +77,11 @@ jobs:
             body: output
           })
 
-    - name: Terraform Plan Status
+    - name: Terragrunt Plan Status
       if: steps.plan.outcome == 'failure'
       run: exit 1
 
 
-    - name: Terraform Apply
+    - name: Terragrunt Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terragrunt run-all apply --terragrunt-non-interactive -auto-approve

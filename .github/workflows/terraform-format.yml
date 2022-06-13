@@ -13,8 +13,8 @@ on:
         required: true
 
 jobs:
-  fmt:
-    name: FMT
+  terraform-format:
+    name: terraform-format
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
