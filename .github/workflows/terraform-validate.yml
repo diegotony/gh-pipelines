@@ -16,5 +16,6 @@ jobs:
     - name: Initialized    
       run: terraform init -input=false 
 
-    - name: Run a Terraform validate    
+    - name: Run a Terraform validat
+      continue-on-error: true    
       run: terraform validate
