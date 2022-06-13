@@ -13,9 +13,52 @@ jobs:
     - uses: actions/checkout@v2
       with:
         ref: ${{ github.event.pull_request.head.ref }}
-        
+
+    - name: Create Config File
+      run: |
+        cat << 'EOF' > .terraform-docs.yml
+        formatter: "markdown" # this is required
+        header-from: main.tf
+        footer-from: ""
+
+        recursive:
+          enabled: false
+          path: modules
+
+        output:
+          file: "README.md"
+          mode: inject
+          template: |-
+            <!-- BEGIN_TF_DOCS -->
+            {{ .Content }}
+            <!-- END_TF_DOCS -->
+
+        output-values:
+          enabled: false
+          from: ""
+
+        sort:
+          enabled: true
+          by: required
+
+        settings:
+          anchor: true
+          color: true
+          default: true
+          description: false
+          escape: true
+          hide-empty: false
+          html: true
+          indent: 2
+          lockfile: true
+          read-comments: true
+          required: true
+          sensitive: true
+          type: true
+        EOF
+
     - name: Render terraform docs inside the README.md and push changes back to PR branch
-      uses: terraform-docs/gh-actions@v0.11.0
+      uses: terraform-docs/gh-actions@v1.0.0
       with:
         working-dir: .
         output-file: README.md
