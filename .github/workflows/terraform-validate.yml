@@ -31,5 +31,6 @@ jobs:
       if: github.event_name == 'pull_request' 
       with:
         message: |
-          Hello world ! :wave:
+          # Summary 
+          ${{steps.validate.outputs.stdout}}
         GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
