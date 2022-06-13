@@ -27,7 +27,7 @@ jobs:
       run: terraform validate
 
     - name: Create Message
-      run: echo "${{steps.validate.outputs}}"
+      run: echo "${{steps.validate}}"
 
     # - name: Comment PR
     #   uses: thollander/actions-comment-pull-request@v1
