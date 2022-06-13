@@ -19,22 +19,48 @@ jobs:
     steps:
     - name: Check out code  
       uses: actions/checkout@v2
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
 
     - name: Initialized    
       run: terraform init  -input=false 
 
-    - name: Run a Terraform fmt    
+    - name: Run a Terraform fmt
+      id: fmt    
       run:
         terraform fmt .
+
+
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Formating 🤖\`${{ steps.fmt.outcome }}\`
+          <details><summary>Formating Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
+
+          </details>
+          
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+
+
 
     - uses: EndBug/add-and-commit@v9 # You can change this to use a specific version.
       with:
         add: '.'
-        message: 'Format Terraform'
+        message: 'docs(fmt-bot): Formating Terraform Code' 
