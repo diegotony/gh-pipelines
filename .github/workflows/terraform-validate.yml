@@ -6,8 +6,8 @@ on:
         type: string
 
 jobs:
-  validate:
-    name: VALIDATE
+  terraform-validate:
+    name: terraform-validate
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
