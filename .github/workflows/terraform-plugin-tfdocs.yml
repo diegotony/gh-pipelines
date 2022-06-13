@@ -6,8 +6,8 @@ on:
         required: false
         type: string
 jobs:
-  docs:
-    name: TFDOCS
+  terraform-plugin-tfdocs:
+    name: terraform-plugin-tfdocs
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
