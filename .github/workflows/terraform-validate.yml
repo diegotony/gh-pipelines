@@ -16,18 +16,46 @@ jobs:
       if: github.event_name == 'pull_request'
       uses: actions/checkout@v1
 
-    - name: Initialized   
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      
+    - name: Initialized
       if: github.event_name == 'pull_request' 
-      run: terraform init -input=false 
+      run: terraform init 
 
     - name: Run a Terraform validate
       id: validate
       continue-on-error: true
       if: github.event_name == 'pull_request' 
-      run: terraform validate
+      run: terraform validate  -no-color
 
-    - name: Create Message
-      run: echo "${{steps.validate}}"
+    - uses: actions/github-script@v6
+      if: github.event_name == 'pull_request'
+      env:
+        PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const output = `#### Terraform Format and Style 🖌\`${{ steps.fmt.outcome }}\`
+          #### Terraform Initialization ⚙️\`${{ steps.init.outcome }}\`
+          #### Terraform Validation 🤖\`${{ steps.validate.outcome }}\`
+          <details><summary>Validation Output</summary>
+
+          \`\`\`\n
+          ${{ steps.validate.outputs.stdout }}
+          \`\`\`
+
+          </details>
+          
+          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`, Working Directory: \`${{ env.tf_actions_working_dir }}\`, Workflow: \`${{ github.workflow }}\`*`;
+            
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: output
+          })
+
 
     # - name: Comment PR
     #   uses: thollander/actions-comment-pull-request@v1
