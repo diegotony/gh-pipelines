@@ -26,11 +26,14 @@ jobs:
       if: github.event_name == 'pull_request' 
       run: terraform validate
 
-    - name: Comment PR
-      uses: thollander/actions-comment-pull-request@v1
-      if: github.event_name == 'pull_request' 
-      with:
-        message: |
-          # Summary 
-          '${{steps.validate.outputs}}'
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: Create Message
+      run: echo "${{steps.validate.outputs}}"
+
+    # - name: Comment PR
+    #   uses: thollander/actions-comment-pull-request@v1
+    #   if: github.event_name == 'pull_request' 
+    #   with:
+    #     message: |
+    #       # Summary 
+    #       '${{steps.validate.outputs}}'
+    #     GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
