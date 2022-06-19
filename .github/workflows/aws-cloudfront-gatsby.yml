@@ -13,11 +13,14 @@ on:
         required: true
       AWS_S3_BUCKET:
         required: true
+      BUILD_DIR:
+        required: true
+
 jobs:
   apply:
     name: aws-cloudfront
     env:
-      NPM_BUILD_DIR: ./build/
+      BUILD_DIR: ${{ secrets.BUILD_DIR }}
       AWS_DISTRIBUTION_ID:  ${{ secrets.AWS_DISTRIBUTION_ID }}
       AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
 
