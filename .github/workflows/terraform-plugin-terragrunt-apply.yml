@@ -50,35 +50,6 @@ jobs:
       run: terragrunt run-all plan -no-color
       continue-on-error: true
 
-    - name: Update Pull Request
-      uses: actions/github-script@0.9.0
-      if: github.event_name == 'pull_request'
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const output = `#### Terragrunt Format and Style 🖌\`${{ steps.fmt.outcome }}\`
-          #### Terragrunt Initialization ⚙️\`${{ steps.init.outcome }}\`
-          #### Terragrunt Plan 📖\`${{ steps.plan.outcome }}\`
-          #### Terragrunt Validation 🤖\`${{ steps.validate.outcome }}\`
-
-          <details><summary>Show Plan</summary>
-
-          \`\`\`\n
-          Terragrunt \n
-          ${{ steps.plan.outputs.stdout }}
-          \`\`\`
-
-          </details>
-
-          *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
-
-          github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: output
-          })
-
     - name: Terragrunt Plan Status
       if: steps.plan.outcome == 'failure'
       run: exit 1
