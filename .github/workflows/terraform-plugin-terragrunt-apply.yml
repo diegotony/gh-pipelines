@@ -33,7 +33,7 @@ jobs:
       with:
         role-to-assume: ${{ secrets.AWS_ACCESS_ROLE }}
         role-session-name: github-action-job
-        role-duration-seconds: 600
+        role-duration-seconds: 900
         aws-region: us-east-1
 
     - name: Terragrunt Initialized  
