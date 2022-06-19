@@ -13,9 +13,6 @@ jobs:
   terraform-plugin-terragrunt-apply:
     name: terraform-plugin-terragrunt-apply
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     env:
       AWS_ACCESS_ROLE: ${{ secrets.AWS_ACCESS_ROLE }}
       AWS_DEFAULT_REGION: us-east-1
