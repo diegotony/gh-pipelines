@@ -9,6 +9,8 @@ on:
         required: true
       AWS_DEFAULT_REGION:
         required: true
+      DISTRIBUTION_ID:
+        required: true
 jobs:
   apply:
     name: aws-cloudfront
