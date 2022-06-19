@@ -41,10 +41,11 @@ jobs:
     - name: Install Dependencies
       run: |
         npm install
+        npm i -g  gatsby-cli
 
     - name: Build Gatsby App
       run: |
-        gatsby build        
+        gatsby build  
 
     - name: Sync S3 Bucket
       run: |
