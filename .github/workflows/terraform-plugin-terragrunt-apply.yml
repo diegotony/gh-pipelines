@@ -7,6 +7,8 @@ on:
     secrets:
       AWS_ACCESS_ROLE:
         required: true
+      AWS_DEFAULT_REGION:
+        required: true
 jobs:
   terraform-plugin-terragrunt-apply:
     name: terraform-plugin-terragrunt-apply
