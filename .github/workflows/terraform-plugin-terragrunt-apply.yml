@@ -31,7 +31,7 @@ jobs:
         AWS_ACCESS_ROLE: ${{ secrets.AWS_ACCESS_ROLE }}
         AWS_DEFAULT_REGION: us-east-1
       with:
-        role-to-assume: $AWS_ACCESS_ROLE
+        role-to-assume: ${{ secrets.AWS_ACCESS_ROLE }}
         aws-region: us-east-1
 
     - name: Terragrunt Initialized  
