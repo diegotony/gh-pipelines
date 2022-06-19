@@ -9,14 +9,14 @@ on:
         required: true
       AWS_DEFAULT_REGION:
         required: true
-      DISTRIBUTION_ID:
+      AWS_DISTRIBUTION_ID:
         required: true
 jobs:
   apply:
     name: aws-cloudfront
     env:
       NPM_BUILD_DIR: ./build/
-      DISTRIBUTION_ID:  ${{ secrets.DISTRIBUTION_ID }}
+      AWS_DISTRIBUTION_ID:  ${{ secrets.AWS_DISTRIBUTION_ID }}
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
@@ -50,4 +50,4 @@ jobs:
     - name: Deploy Invalidation 
       run: |
         echo "Deploy to Cloudfront"
-        aws cloudfront create-invalidation --paths /* --distribution-id $DISTRIBUTION_ID
+        aws cloudfront create-invalidation --paths /* --distribution-id $AWS_DISTRIBUTION_ID
