@@ -53,7 +53,7 @@ jobs:
     - name: Sync S3 Bucket
       run: |
         echo "Save in S3 Bucket"
-        aws s3 sync $NPM_BUILD_DIR $AWS_S3_BUCKET
+        aws s3 sync $BUILD_DIR $AWS_S3_BUCKET
 
     - name: Deploy Invalidation 
       run: |
