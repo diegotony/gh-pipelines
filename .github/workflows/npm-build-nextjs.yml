@@ -34,6 +34,7 @@ jobs:
 
     - name: Build NextJs App
       run: |
+        npm i -g create-next-app
         npm run build  
 
     - uses: montudor/action-zip@v1
