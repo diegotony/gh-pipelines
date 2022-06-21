@@ -25,6 +25,9 @@ jobs:
       with:
         name: node_modules
 
+    - name: Check
+      run: ls -lh
+
     - uses: montudor/action-zip@v1
       with:
         args: unzip -qq -r node_modules.zip -d node_modules
