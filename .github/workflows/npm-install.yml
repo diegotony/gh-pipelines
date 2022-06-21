@@ -25,7 +25,7 @@ jobs:
     - name: Zip node-modules
       run: | 
         ls -lh
-        zip -r node-modules.zip node-modules 
+        zip -r node-modules.zip . -i node-modules
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
       with:
