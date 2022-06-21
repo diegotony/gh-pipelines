@@ -39,7 +39,7 @@ jobs:
         args: unzip -qq build.zip -d build
 
     - name: Check
-      run: ls -lh
+      run: ls -lh && cd build && ls -lh
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
