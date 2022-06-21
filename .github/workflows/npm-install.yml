@@ -22,7 +22,8 @@ jobs:
     - name: Install Dependencies
       run: |
         npm install
-
+    - name: Check
+      run: ls -lh
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
       with:
