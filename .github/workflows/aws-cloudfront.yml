@@ -54,4 +54,4 @@ jobs:
     - name: Deploy Invalidation 
       run: |
         echo "Deploy to Cloudfront"
-        aws cloudfront create-invalidation --paths .next/* --distribution-id $AWS_DISTRIBUTION_ID
+        aws cloudfront create-invalidation --paths /* --distribution-id $AWS_DISTRIBUTION_ID
