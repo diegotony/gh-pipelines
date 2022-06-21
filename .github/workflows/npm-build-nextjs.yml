@@ -33,9 +33,12 @@ jobs:
       with:
         args: unzip -qq node_modules.zip -d node_modules
 
-    - name: Build NextJs App
+    - name: Install Next
       run: |
         npm i -g next
+
+    - name: Build NextJs App
+      run: |
         npm run build  
 
     - uses: montudor/action-zip@v1

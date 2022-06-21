@@ -25,10 +25,14 @@ jobs:
 
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r node_modules.zip node_modules
+        args: zip -qq -r node_modules.zip node_modules public package.lock.json
 
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
       with:
         name: node_modules
         path: node_modules.zip
+
+    - name: Check
+      run: |
+        ls -lh
