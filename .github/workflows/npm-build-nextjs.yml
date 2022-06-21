@@ -20,19 +20,6 @@ jobs:
       with:
         node-version: 18
 
-    - name: Download node-modules
-      uses: actions/download-artifact@v3
-      with:
-        name: node_modules
-
-    - name: Check
-      run: | 
-        ls -lh
-        
-    # - uses: montudor/action-zip@v1
-    #   with:
-    #     args: unzip -qq node_modules.zip -d node_modules
-
     - name: Install Next
       run: |
         npm install
@@ -42,9 +29,13 @@ jobs:
       run: |
         npm run build --if-present 
 
+    - name: Check
+      run: | 
+        ls -lh
+
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r build.zip $BUILD_DIR
+        args: zip -qq -r build.zip .next/
 
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
