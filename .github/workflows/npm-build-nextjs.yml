@@ -1,0 +1,45 @@
+on: 
+  workflow_call:
+    inputs:
+      repository:
+        required: false
+        type: string
+
+jobs:
+  apply:
+    name: npm-build-nextjs
+    env:
+      BUILD_DIR: .next/
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code  
+      uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: current
+
+    - name: Download node-modules
+      uses: actions/download-artifact@v3
+      with:
+        name: node_modules
+
+    - uses: montudor/action-zip@v1
+      with:
+        args: unzip -qq -r node_modules.zip -d node_modules
+
+    - name: Build NextJs App
+      run: |
+        npm i -g  npx create-next-app
+        npm run build  
+
+    - uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r build.zip $BUILD_DIR
+
+    - name: Upload node-modules
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build.zip
