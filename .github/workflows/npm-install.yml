@@ -6,7 +6,7 @@ on:
         type: string
 jobs:
   npm-install:
-    name: terraform-plugin-terragrunt-apply
+    name: npm-install
     runs-on: ubuntu-latest
     env:
       AWS_ACCESS_ROLE: ${{ secrets.AWS_ACCESS_ROLE }}
@@ -27,4 +27,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: node-modules
-        path: "~/node-modules/*"
+        path: "node-modules/*"
