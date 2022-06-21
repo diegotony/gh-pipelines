@@ -38,6 +38,9 @@ jobs:
       with:
         args: unzip -qq build.zip -d $BUILD_DIR
 
+    - name: Check
+      run: ls -lh
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
