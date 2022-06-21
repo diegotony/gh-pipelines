@@ -37,14 +37,8 @@ jobs:
       run: |
         npm i -g next
 
-    - uses: actions/cache@v2
-      with:
-        path: |
-          ~/.npm
-          ${{ github.workspace }}/.next/cache
-        key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-        restore-keys: |
-          ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json') }}-
+    - name : ci
+      run: npm ci
 
     - name: Build NextJs App
       run: |
