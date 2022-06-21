@@ -22,10 +22,12 @@ jobs:
     - name: Install Dependencies
       run: |
         npm install
-    - name: Check
-      run: ls -lh
+    - name: Zip node-modules
+      run: | 
+        ls -lh
+        zip -r node-modules.zip node-modules 
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
       with:
         name: node-modules
-        path: node-modules
+        path: node-modules.zip
