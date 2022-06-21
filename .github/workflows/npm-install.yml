@@ -1,0 +1,24 @@
+on: 
+  workflow_call:
+    inputs:
+      repository:
+        required: false
+        type: string
+jobs:
+  npm-install:
+    name: terraform-plugin-terragrunt-apply
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_ROLE: ${{ secrets.AWS_ACCESS_ROLE }}
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+    - name: Check out code  
+      uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: current
+
+    - name: Install Dependencies
+      run: |
+        npm install

@@ -27,11 +27,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Check out code  
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
 
-    - uses: actions/setup-node@v3
-      with:
-        node-version: current
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -40,15 +37,6 @@ jobs:
         role-session-name: github-action-job
         role-duration-seconds: 900
         aws-region: us-east-1
-
-    - name: Install Dependencies
-      run: |
-        npm install
-        npm i -g  gatsby-cli
-
-    - name: Build Gatsby App
-      run: |
-        gatsby build  
 
     - name: Sync S3 Bucket
       run: |
