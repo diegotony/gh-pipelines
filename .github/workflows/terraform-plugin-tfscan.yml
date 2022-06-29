@@ -1,0 +1,18 @@
+name: Check Security in Terraform files
+on: 
+  workflow_call:
+    secrets:
+      GH_TOKEN:
+        required: true
+jobs:
+  terraform-plugin-tfscan:
+    name: terraform-plugin-tfdocs
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      if: github.event_name == 'pull_request'
+      with:
+        ref: ${{ github.event.pull_request.head.ref }}
+    - uses: triat/terraform-security-scan@v3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
