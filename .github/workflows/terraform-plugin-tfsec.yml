@@ -5,7 +5,7 @@ on:
       GH_TOKEN:
         required: true
 jobs:
-  terraform-plugin-tfscan:
+  terraform-plugin-tfsec:
     name: terraform-plugin-tfdocs
     runs-on: ubuntu-latest
     steps:
@@ -13,6 +13,7 @@ jobs:
       if: github.event_name == 'pull_request'
       with:
         ref: ${{ github.event.pull_request.head.ref }}
-    - uses: triat/terraform-security-scan@v3
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+    - name: tfsec
+      uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+      with:
+        github_token: ${{ secrets.GH_TOKEN }}
