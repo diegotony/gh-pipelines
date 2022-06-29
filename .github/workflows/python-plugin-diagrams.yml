@@ -1,0 +1,21 @@
+on: 
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+jobs:
+  python-plugin-diagrams:
+    name: python-plugin-diagrams
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Diagram
+          id: diagram
+          uses: diegotony/diagrams-action@V1.0.0
+          with:
+            args: python3 diagram.py
+
+    - uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: diagrams-docs: automated action 
