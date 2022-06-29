@@ -6,17 +6,14 @@ on:
         required: true
 jobs:
   terraform-validate:
-    if: github.event_name == 'pull_request'
     uses: diegotony/gh-pipelines/.github/workflows/terraform-validate.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
   terraform-plugin-tfsec:
-    if: github.event_name == 'pull_request'
     uses: diegotony/gh-pipelines/.github/workflows/terraform-plugin-tfsec.yml@main
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
   terraform-plugin-tfdocs:
-    if: github.ref == 'refs/heads/main'
     uses: diegotony/gh-pipelines/.github/workflows/terraform-plugin-tfdocs.yml@main 
