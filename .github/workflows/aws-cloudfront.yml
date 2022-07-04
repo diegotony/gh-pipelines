@@ -52,7 +52,7 @@ jobs:
     - name: Sync S3 Bucket
       run: |
         echo "Save in S3 Bucket"
-        aws s3 sync build/${BUILD_DIR} $AWS_S3_BUCKET
+        aws s3 sync build/dist $AWS_S3_BUCKET
 
     - name: Deploy Invalidation 
       run: |

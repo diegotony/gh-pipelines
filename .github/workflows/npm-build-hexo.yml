@@ -27,13 +27,18 @@ jobs:
       run: |
         hexo generate 
 
+    - name: Rename dir
+      run: |
+        mv public dist
+
+
     - name: Check
       run: | 
         ls -lh
 
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r build.zip public/
+        args: zip -qq -r build.zip dist/
 
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
