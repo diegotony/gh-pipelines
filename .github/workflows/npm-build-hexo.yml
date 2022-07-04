@@ -25,12 +25,17 @@ jobs:
 
     - name: Build Hexo App
       run: |
-        hexo clean && hexo generate -d
+        hexo generate -d
 
 
-    - name: Check
+    - name: Check directories
       run: | 
         ls -lh
+
+    - name: tree directories
+      run: | 
+        tree public
+
 
     - uses: montudor/action-zip@v1
       with:
