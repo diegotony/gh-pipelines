@@ -1,0 +1,42 @@
+on: 
+  workflow_call:
+    inputs:
+      repository:
+        required: false
+        type: string
+
+jobs:
+  apply:
+    name: npm-build-hexo
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code  
+      uses: actions/checkout@v2
+
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Hexo
+      run: |
+        npm install
+        npm i -g hexo-cli
+
+    - name: Build Hexo App
+      run: |
+        hexo generate 
+
+    - name: Check
+      run: | 
+        ls -lh
+
+    - uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r build.zip public/
+
+    - name: Upload node-modules
+      uses: actions/upload-artifact@v3
+      with:
+        name: build
+        path: build.zip
