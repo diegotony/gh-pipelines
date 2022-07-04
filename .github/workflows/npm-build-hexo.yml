@@ -23,9 +23,9 @@ jobs:
         npm install
         npm i -g hexo-cli
 
-    # - name: Build Hexo App
-    #   run: |
-    #     hexo generate -d
+    - name: Build Hexo App
+      run: |
+        hexo generate -d
 
 
     - name: Check directories
