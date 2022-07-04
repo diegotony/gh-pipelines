@@ -25,7 +25,7 @@ jobs:
 
     - name: Build Hexo App
       run: |
-        hexo generate 
+        hexo clean && hexo deploy
 
     - name: Rename dir
       run: |
