@@ -25,11 +25,7 @@ jobs:
 
     - name: Build Hexo App
       run: |
-        hexo clean && hexo deploy
-
-    - name: Rename dir
-      run: |
-        mv public dist
+        hexo clean && hexo generate -d
 
 
     - name: Check
@@ -38,7 +34,7 @@ jobs:
 
     - uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r build.zip dist/
+        args: zip -qq -r build.zip public/
 
     - name: Upload node-modules
       uses: actions/upload-artifact@v3
