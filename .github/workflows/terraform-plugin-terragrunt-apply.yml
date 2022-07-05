@@ -9,6 +9,11 @@ on:
         required: true
       AWS_DEFAULT_REGION:
         required: true
+
+concurrency: 
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   terraform-plugin-terragrunt-apply:
     name: terraform-plugin-terragrunt-apply
