@@ -3,6 +3,10 @@ on:
     secrets:
       GH_TOKEN:
         required: true
+    inputs:
+      CUSTOM_DOMAIN:
+        type: string
+        required: true
 
 # concurrency: 
 #   group: ${{ github.ref }}
@@ -24,6 +28,9 @@ jobs:
 
       - name: Build
         run: hugo --minify
+
+      - name: Create cname file
+        run: echo '{{inputs.CUSTOM_DOMAIN}}' > public/CNAME
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
