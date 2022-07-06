@@ -1,9 +1,8 @@
 on: 
   workflow_call:
-    inputs:
-      repository:
-        required: false
-        type: string
+    secrets:
+      GH_TOKEN:
+        required: true
 
 # concurrency: 
 #   group: ${{ github.ref }}
@@ -30,5 +29,5 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
           publish_dir: ./public
