@@ -1,0 +1,11 @@
+on: 
+  workflow_call:
+    inputs:
+      repository:
+        required: false
+        type: string
+jobs:
+  test:
+    uses: diegotony/gh-pipelines/.github/workflows/node/install.yml@main
+    inputs:
+      node_version: 18
