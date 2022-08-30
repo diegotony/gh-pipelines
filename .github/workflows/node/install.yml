@@ -3,16 +3,8 @@ on:
     inputs:
       node_version:
         required: true
-        default: 18
         type: number
-      repository:
-        required: false
-        default: "test"
-        type: string
-      files:
-        required: false
-        default: "node_modules public package.lock.json"
-        type: string
+
 jobs:
   npm-install:
     name: npm-install
@@ -29,14 +21,3 @@ jobs:
     - name: Install Dependencies
       run: |
         npm install
-
-    - name: Zip files
-      uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r files.zip ${{ inputs.files }}
-
-    - name: Upload node-modules
-      uses: actions/upload-artifact@v3
-      with:
-        name: files
-        path: files.zip

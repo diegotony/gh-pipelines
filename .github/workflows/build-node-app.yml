@@ -5,7 +5,7 @@ on:
         required: false
         type: string
 jobs:
-  test:
-    uses: ./node/install.yml@main
+  install:
+    uses: ./.github/workflows/node/install.yml@main
     inputs:
       node_version: 18
