@@ -6,6 +6,6 @@ on:
         type: string
 jobs:
   install:
-    uses: ./.github/workflows/node/install.yml@main
+    uses: ./.github/workflows/node/install.yml
     inputs:
       node_version: 18
