@@ -4,8 +4,13 @@ on:
       repository:
         required: false
         type: string
+
+      node_version:
+        required: false
+        default: 18
+        type: number
 jobs:
   install:
     uses: ./.github/workflows/install.yml
     with:
-      node_version: 18
+      node_version: ${{inputs.node_version}}
