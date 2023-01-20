@@ -22,16 +22,11 @@ jobs:
            *.tf
 
     - name: Create Config File
-      if: steps.verify-changed-files.outputs.files_changed == 'true'
       run: |
         cat << 'EOF' > .terraform-docs.yml
         formatter: "markdown" # this is required
         header-from: main.tf
         footer-from: ""
-
-        recursive:
-          enabled: false
-          path: modules
 
         output:
           file: "README.md"
@@ -66,7 +61,6 @@ jobs:
         EOF
 
     - name: Render terraform docs inside the README.md and push changes back to PR branch
-      if:  steps.verify-changed-files.outputs.files_changed == 'true'
       uses: terraform-docs/gh-actions@v1.0.0
       with:
         working-dir: .
