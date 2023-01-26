@@ -1,0 +1,48 @@
+name: Terraform Module
+
+on: 
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+    secrets:
+      AWS_ACCESS_ROLE:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+      GH_TOKEN:
+        required: true
+
+jobs:
+  terraform-validate:
+    uses: ./.github/workflows/terraform-validate.yml
+    if: github.event_name == 'pull_request'
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  terraform-terratest:
+    uses: ./.github/workflows/terraform-plugin-terratest.yml
+    if: github.event_name == 'pull_request'
+    permissions:
+      id-token: write
+      contents: read
+    secrets:
+      AWS_ACCESS_ROLE: ${{ secrets.AWS_ACCESS_ROLE }}
+      AWS_DEFAULT_REGION: "us-east-1"
+      
+  terraform-plugin-tfsec:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/terraform-plugin-tfsec.yml
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+  terraform-plugin-tfdocs:
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/terraform-plugin-tfdocs.yml
+
+  semantic-release:
+    uses: ./.github/workflows/semantic-release.yml
+    if: github.ref == 'refs/heads/main' 
+    secrets:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
