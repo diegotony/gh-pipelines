@@ -11,7 +11,7 @@ on:
         required: true
 
 jobs:
-  terraform-plugin-terragrunt-fmt:
+  terraform-plugin-terratest:
     name: terraform-plugin-terragrunt-fmt
     runs-on: ubuntu-latest
     steps:
