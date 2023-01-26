@@ -1,4 +1,6 @@
-name: Terraform Module
+#
+
+name: Terraform Module Workflow
 
 on: 
   workflow_call:
@@ -15,13 +17,13 @@ on:
         required: true
 
 jobs:
-  terraform-validate:
+  validate:
     uses: ./.github/workflows/terraform-validate.yml
     if: github.event_name == 'pull_request'
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-  terraform-terratest:
+  terratest:
     uses: ./.github/workflows/terraform-plugin-terratest.yml
     if: github.event_name == 'pull_request'
     permissions:
@@ -31,13 +33,13 @@ jobs:
       AWS_ACCESS_ROLE: ${{ secrets.AWS_ACCESS_ROLE }}
       AWS_DEFAULT_REGION: "us-east-1"
       
-  terraform-plugin-tfsec:
+  tfsec:
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/terraform-plugin-tfsec.yml
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
-  terraform-plugin-tfdocs:
+  tfdocs:
     if: github.event_name == 'pull_request'
     uses: ./.github/workflows/terraform-plugin-tfdocs.yml
 
