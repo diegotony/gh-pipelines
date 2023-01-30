@@ -9,6 +9,8 @@ on:
         required: true
       AWS_DEFAULT_REGION:
         required: true
+      AWS_ACCOUNT_ID:
+        required: false
 
 jobs:
   terraform-plugin-terratest:
@@ -51,6 +53,8 @@ jobs:
 
     - name: Run test
       if: steps.check.outcome != 'failure'
+      env:
+        AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
       run: | 
         cd tests/
         go mod tidy
