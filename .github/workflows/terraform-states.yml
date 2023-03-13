@@ -1,0 +1,29 @@
+on: 
+  workflow_call:
+    inputs:
+      repo:
+        required: false
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+      AWS_DEFAULT_REGION:
+        required: true
+
+jobs:
+  terraform-format:
+    name: terraform-format
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code  
+      uses: actions/checkout@v2
+      
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+
+# TODO
+# storage state by dir in repository
+# dont use terragrunt
+# extensible and fllexible setup
